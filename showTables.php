@@ -14,7 +14,7 @@
 <body>
 <?php
         include 'connect.inc.php';
-        include 'createAthletes.php';
+        include 'createTables.php';
         $self = htmlentities($_SERVER['PHP_SELF']);
         echo "<form action = '$self' method='POST'> ";
         
@@ -23,41 +23,52 @@
 	<img src="photos/rioOlympics.png" class="img-rounded" alt="">
 	
 	<div class="container">
-	<h2 class="text-center">Results</h2>
+	<h2 class="text-center">Student List</h2>
 </div>
 
 <div class="flex-container">
 <?php
 try
     {
-        $query = 'SELECT DISTINCT medalists.firstName AS first
-        FROM medalists,sport,country
-            WHERE medalists.sportId=sport.sportId
-            AND medalists.countryId=country.countryId
-                ORDER BY medalists.firstName';
-        $stmt  = $pdo->prepare($query);
-        $stmt->execute();
+        $selectString = 'SELECT students.firstName AS first, students.lastName AS last, lab.labname AS lab, lab.isCheckpoint AS isChecked, completion.responseTime AS completed
+        FROM students,completion,data,lab,tool
+            WHERE students.studentId=completion.studentId
+            AND students.studentId=data.studentId
+            AND lab.labId=data.dataId
+            AND data.toolId=tool.toolId
+            AND completion.studentId=students.studentId
+                ORDER BY students.firstName';
+        $StudentListQuery = $pdo->query($selectString); 
+        
 ?>
 <!--Creates the dropdown so that the user can select a name from the database -->
-<div class="form-group">
-<label for="name">Select Name:</label>'
-<select name="list2" class="form-control" class="selectpicker" id="name">
-<option value='-1'>Please Select</option>
+<div class="flex-container">
+    <div class="table-wrapper-scroll-y">
+		<table class="table table-bordered table-striped table-hover">
+            <thead class="thead-dark">
+                <tr>	
+                    <th scope="col">First Name</th><th scope="col">Last Name</th><th scope="col">lab Number</th><th scope="col">Is a Checkmark</th><th scope="completed">Completed</th>
+                </tr>
+            </thead>
+                <tbody>
 <?php
-    foreach ($MedalistSportCountry as $row) 
+    foreach ($StudentListQuery as $row) 
         {
             echo("
                 <tr>
                 <td>$row[first]</td>
                 <td>$row[last]</td>
-                <td>$row[sport]</td>
-                <td>$row[country]<br/><img src='$row[flagImage]' alt='' class='rounded-top img-thumbnail' width='70' height='70'></td>
-                <td><img src='photos/$row[image]' alt='Image not found' class='rounded-top img-thumbnail' width='100' height='100'></td>
+                <td>$row[lab]</td>
+                <td>$row[isChecked]</td>
+                <td><$row[completed]></td>
                 </tr>
                 ");
         }
     ?>
-</select>
+</tbody>
+        </table>
+    </div> 
+</div>
 <?php
     }
 
