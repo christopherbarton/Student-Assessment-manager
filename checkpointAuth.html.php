@@ -1,6 +1,6 @@
 <?php
     $self = htmlentities($_SERVER['PHP_SELF']);
-		echo "<form action = '$self' method='POST'> ";
+        echo "<form action = '$self' method='POST'> ";
 ?>
 <?php
 include 'connect.inc.php';
@@ -10,7 +10,7 @@ include 'createTables.php';
  
 // Check if the user is already logged in, if yes then redirect him to welcome page
 if (isset($_SESSION["loggedin"]) && $_SESSION["loggedin"] === true) {
-    header("location: adminDashboard.html.php");
+    header("location: checkPoint.html.php");
     exit;
 }
 
@@ -66,8 +66,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 // Check if username exists, if yes then verify password
                 if ($stmt->rowCount() == 1) {
                     if ($row = $stmt->fetch()) {
-                        $firstName = $row["firstName"];
-                        $lastName = $row["lastName"];
                         $adminId = $row["adminId"];
                         $userName = $row["userName"];
                         $hashed_password = $row["password"];
@@ -78,15 +76,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                             $_SESSION["loggedin"] = true;
                             $_SESSION["adminId"] = $adminId;
                             $_SESSION["userName"] = $userName;
-                            $_SESSION["firstName"] = $firstName;
-                            $_SESSION["lastName"] = $lastName;
-                            
+                           
                             $sessionfile = fopen("sessionfile.txt", "w");
                             fputs($sessionfile, session_encode());
                             fclose($sessionfile); //Debugging Session informtation
                             
                             // Redirect user to dashboard page
-                            header("location: adminDashboard.html.php");
+                            header("location: checkPoint.html.php");
                         } else {
                             // Display an error message if password is not valid
                             $password_err = "<font size='3' color='red'>"."The password you entered was not valid."."</font>";
@@ -132,7 +128,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
   <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
     <div class="navbar-nav">
       <form class="form-inline">
-      <a href="logout.php" class="btn btn-primary">Home</a>
+      <input type='submit' class="btn btn-primary" name='' value='Home'>
       <input type='submit' class="btn btn-primary" name='studentLogin' value='Student Login'>
       <input type='submit' class="btn btn-primary" name='adminLogin' value='Admin Login'>
       <a class="nav-item nav-link " href="#"></a>
@@ -140,11 +136,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
   </div>
 </nav>
 <div class="container " align="center">
- <div style = "margin:30px">
+<div style = "margin:30px">
   <div style = "width:400px; border: solid 1px #547BCA; " align = "left">
-   <div style = "background-color:#547BCA; color:#FFFFFF; padding:3px;"><h2 align="center"><b>Login</b></h2></div>
-    <div style = "margin:30px">
-     <div class="wrapper">
+   <div style = "background-color:#547BCA; color:#FFFFFF; padding:3px;"><h2 align="center"><b>Authorisation Login</b></h2></div>
+   <div style = "margin:30px">
+    <div class="wrapper">
         <h2>Login</h2>
         <p>Please fill in your credentials to login.</p>
         <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post">
@@ -159,13 +155,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 <span class="help-block"><?php echo $password_err; ?></span>
             </div>
             <div class="form-group">
-                <input type='submit' class="btn btn-primary" name='adminLogin' value='Admin Login'>
+                <input type='submit' class="btn btn-primary" name='studentLogin' value='Authorisation Login'>
             </div>
             <p>Don't have an account? <a href="register.php">Sign up now</a>.</p>
         </form>
-      </div>
+       </div>
     </div>
-   </div>
-  </div>
- </div>
-</div>
+    </div>
+    </div>
+    </div>
+    </div>

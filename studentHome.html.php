@@ -15,15 +15,16 @@
 	</head>
 <body >
 <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
-  <a class="navbar-brand" href="#">Student Login</a>
+  <a class="navbar-brand" href="#">Student Assistant</a>
   <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
     <span class="navbar-toggler-icon"></span>
   </button>
   <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
     <div class="navbar-nav">
-      <a class="nav-item nav-link active" href="controller.php">Home <span class="sr-only">(current)</span></a>
-      <a class="nav-item nav-link active" href="studentLogin.html.php">Student Login</a>
-      <a class="nav-item nav-link active" href="adminLogin.html.php">Admin Login</a>
+      <form class="form-inline">
+      <input type='submit' class="btn btn-primary" name='' value='Home'>
+      <input type='submit' class="btn btn-primary" name='studentLogin' value='Student Login'>
+      <input type='submit' class="btn btn-primary" name='adminLogin' value='Admin Login'>
       <a class="nav-item nav-link " href="#"></a>
     </div>
   </div>

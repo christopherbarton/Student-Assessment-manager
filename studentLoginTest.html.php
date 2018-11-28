@@ -1,8 +1,4 @@
 <?php
-    $self = htmlentities($_SERVER['PHP_SELF']);
-		echo "<form action = '$self' method='POST'> ";
-?>
-<?php
 include 'connect.inc.php';
 include 'createTables.php';
 // Initialize the session
@@ -10,7 +6,7 @@ include 'createTables.php';
  
 // Check if the user is already logged in, if yes then redirect him to welcome page
 if (isset($_SESSION["loggedin"]) && $_SESSION["loggedin"] === true) {
-    header("location: adminDashboard.html.php");
+    header("location: studentDashboard.html.php");
     exit;
 }
 
@@ -29,7 +25,7 @@ $username_err = $password_err = "";
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Setup $username and $password variable if it exsists
     if (isset($_POST["userName"])) {
-        $userName = trim($_POST["userName"]); // Trim (secure) user input
+        $userName = trim($_POST["userName"]); // Trim (secure) user input 
         $_SESSION["userName"] = $userName;
     }
     if (isset($_POST["password"])) {
@@ -38,7 +34,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Check if username is empty
     if (empty($userName)) {
         $username_err = "Please enter username.";
-    } else {
+    } 
+    else {
         $userName = trim($_POST["userName"]);// Trim (secure) user input
     }
     
@@ -47,12 +44,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $password_err = "Please enter your password.";
     } else {
         $password = trim($_POST["password"]); // Trim (secure) user input
+
     }
     
     // Validate credentials
     if (empty($username_err) && empty($password_err)) {
         // Prepare a select statement
-        $sql = "SELECT firstName,lastName,adminId, userName, password FROM admin WHERE userName = :userName";
+        $sql = "SELECT firstName,lastName,studentId, userName, password FROM students WHERE userName = :userName";
 
         if ($stmt = $pdo->prepare($sql)) {
             // Bind variables to the prepared statement as parameters
@@ -68,7 +66,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     if ($row = $stmt->fetch()) {
                         $firstName = $row["firstName"];
                         $lastName = $row["lastName"];
-                        $adminId = $row["adminId"];
+                        $studentId = $row["studentId"];
                         $userName = $row["userName"];
                         $hashed_password = $row["password"];
                         if (password_verify($password, $hashed_password)) {
@@ -76,7 +74,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                             session_start();
                             // Store data in session variables
                             $_SESSION["loggedin"] = true;
-                            $_SESSION["adminId"] = $adminId;
+                            $_SESSION["studentId"] = $studentId;
                             $_SESSION["userName"] = $userName;
                             $_SESSION["firstName"] = $firstName;
                             $_SESSION["lastName"] = $lastName;
@@ -86,7 +84,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                             fclose($sessionfile); //Debugging Session informtation
                             
                             // Redirect user to dashboard page
-                            header("location: adminDashboard.html.php");
+                            header("location: studentDashboard.html.php");
                         } else {
                             // Display an error message if password is not valid
                             $password_err = "<font size='3' color='red'>"."The password you entered was not valid."."</font>";
@@ -133,18 +131,18 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <div class="navbar-nav">
       <form class="form-inline">
       <a href="logout.php" class="btn btn-primary">Home</a>
-      <input type='submit' class="btn btn-primary" name='studentLogin' value='Student Login'>
-      <input type='submit' class="btn btn-primary" name='adminLogin' value='Admin Login'>
+      <input type='submit' class="btn btn-primary" name='studentLogin' value='Student Login' disabled>
+      <input type='submit' class="btn btn-primary" name='adminLogin' value='Admin Login' disabled>
       <a class="nav-item nav-link " href="#"></a>
     </div>
   </div>
 </nav>
 <div class="container " align="center">
- <div style = "margin:30px">
-  <div style = "width:400px; border: solid 1px #547BCA; " align = "left">
-   <div style = "background-color:#547BCA; color:#FFFFFF; padding:3px;"><h2 align="center"><b>Login</b></h2></div>
-    <div style = "margin:30px">
-     <div class="wrapper">
+<div style = "margin:30px">
+ <div style = "width:400px; border: solid 1px #547BCA; " align = "left">
+  <div style = "background-color:#547BCA; color:#FFFFFF; padding:3px;"><h2 align="center"><b>Login</b></h2></div>
+   <div style = "margin:30px">
+    <div class="wrapper">
         <h2>Login</h2>
         <p>Please fill in your credentials to login.</p>
         <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post">
@@ -159,13 +157,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 <span class="help-block"><?php echo $password_err; ?></span>
             </div>
             <div class="form-group">
-                <input type='submit' class="btn btn-primary" name='adminLogin' value='Admin Login'>
+                <input type='submit' class="btn btn-primary" name='studentLogin' value='Student Login'>
             </div>
             <p>Don't have an account? <a href="register.php">Sign up now</a>.</p>
         </form>
+       </div>
       </div>
     </div>
    </div>
   </div>
  </div>
-</div>
+</body>
+</html>

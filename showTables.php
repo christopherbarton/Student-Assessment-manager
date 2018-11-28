@@ -30,14 +30,20 @@
 <?php
 try
     {
-        $selectString = 'SELECT students.firstName AS first, students.lastName AS last, lab.labname AS lab, lab.isCheckpoint AS isChecked, completion.responseTime AS completed
-        FROM students,completion,data,lab,tool
-            WHERE students.studentId=completion.studentId
-            AND students.studentId=data.studentId
-            AND lab.labId=data.dataId
-            AND data.toolId=tool.toolId
-            AND completion.studentId=students.studentId
-                ORDER BY students.firstName';
+        $selectString = 'SELECT students.firstName AS first, 
+                                students.lastName AS last, 
+                                lab.labname AS lab, 
+                                lab.isCheckpoint AS isChecked, 
+                                completion.responseTime AS completed, 
+                                students.userName AS username,
+                                students.password AS password
+                                    FROM students,completion,data,lab,tool
+                                        WHERE students.studentId=completion.studentId
+                                        AND students.studentId=data.studentId
+                                        AND lab.labId=data.dataId
+                                        AND data.toolId=tool.toolId
+                                        AND completion.studentId=students.studentId
+                                            ORDER BY students.firstName';
         $StudentListQuery = $pdo->query($selectString); 
         
 ?>
@@ -60,7 +66,9 @@ try
                 <td>$row[last]</td>
                 <td>$row[lab]</td>
                 <td>$row[isChecked]</td>
-                <td><$row[completed]></td>
+                <td>$row[username]</td>
+                <td>$row[password]</td>
+                <td>$row[completed]</td>
                 </tr>
                 ");
         }

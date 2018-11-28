@@ -8,7 +8,7 @@ try
         $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         $pdo->exec('SET NAMES "utf8"');
 
-      echo "Connected<br/>"; // Debugging
+      // echo "Connected<br/>"; // Debugging
     }
 
 catch (PDOException $e)
@@ -112,8 +112,7 @@ catch (PDOException $e)
                 labId                   INT(10) NOT NULL,
                 responseTime            TIMESTAMP,
                 FOREIGN KEY (studentId) REFERENCES students(studentId),       
-                FOREIGN KEY (labId) REFERENCES lab(labId),
-                PRIMARY KEY(completionId)           
+                                PRIMARY KEY(completionId)           
             )";
 
             $pdo->exec($createQuery);
@@ -136,8 +135,7 @@ catch (PDOException $e)
 
                  FOREIGN KEY (toolId) REFERENCES tool(toolId),       
                  FOREIGN KEY (studentId) REFERENCES students(studentId),
-                 FOREIGN KEY (labId) REFERENCES lab(labId),
-                 PRIMARY KEY(dataId)           
+                       PRIMARY KEY(dataId)           
              )";
  
              $pdo->exec($createQuery);
@@ -166,7 +164,7 @@ catch (PDOException $e)
                 $stmt->bindParam(':firstName',$firstName);
                 $stmt->bindParam(':lastName',$lastName);
                 $stmt->bindParam(':userName',$userName);
-                $stmt->bindParam(':password',$password);
+                $stmt->bindParam(':password', $password);
                 $stmt->bindParam(':adminPassword',$adminPassword);
                 
                 $file = fopen("admin.csv","r");
@@ -177,8 +175,8 @@ catch (PDOException $e)
                     $firstName= $myArray[1];
                     $lastName= $myArray[2];
                     $userName= $myArray[3];
-                    $password= $myArray[4];
-                    $adminPassword= $myArray[5];
+                    $password= password_hash($myArray[4], PASSWORD_DEFAULT);
+                    $adminPassword= password_hash($myArray[5], PASSWORD_DEFAULT);
                     $stmt->execute();
                     }
                 fclose($file);
@@ -202,7 +200,8 @@ catch (PDOException $e)
                      $firstName= $myArray[2];
                      $lastName= $myArray[3];
                      $userName= $myArray[4];
-                     $password= "12345";
+                     $password= password_hash("12345", PASSWORD_DEFAULT);
+
                      $stmt->execute();
                      }
                  fclose($file);
